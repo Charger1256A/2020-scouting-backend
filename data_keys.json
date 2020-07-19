@@ -1,0 +1,37 @@
+{ 
+    "generalKeys": {
+        "aL": "autoLower",
+        "aO": "autoOuter",
+        "aI": "autoInner",
+        "t1": "tele1",
+        "t2": "tele2",
+        "t3": "tele3",
+        "t4": "tele4",
+        "t5": "tele5",
+        "t6": "tele6",
+        "nm": "name",
+        "sH": "soloHange",
+        "rD": "robotDied",
+        "wH": "assistedHang",
+        "dR": "driverRating",
+        "deR": "defenseRating",
+        "pR": "PowercellIntakeRating",
+        "sR": "shootingRating",
+        "n": "notes",
+        "hN": "hangNotes",
+        "e": "event",
+        "t": "team",
+        "m": "match",
+        "a": "alliance",
+        "sP": "startingPosition",
+        "iL": "intiationLine"
+    },
+    "eventKeys": {
+        "aE": "autoEvents",
+        "tE": "teleEvents",
+        "tm": "time",
+        "i": "itemScored",
+        "p": "position",
+        "e": "event"
+    }
+}
