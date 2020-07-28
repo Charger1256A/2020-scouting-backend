@@ -42,3 +42,46 @@ function parseEvents(rawData, event) {
     }
     return "{" + events + "}";
 }
+
+function addStats(data) {
+    let soloHangPoints = [0,25,40];
+    let assistedClimbPoints = [0,50,65];
+    let stats = ["teleCargoHatch", "teleCargoCargo", "teleRocketHatch", "teleRocketCargo", "teleLevel2Hatch", "teleLevel2Cargo",
+    "teleLevel3Hatch", "teleLevel3Cargo", "teleFailedLevel2Hatch", "teleFailedLevel3Hatch", "teleFailedLevel2Cargo", "teleFailedLevel3Cargo"];
+    for (var i in stats) 
+        data[stats[i]] = 0
+    for (var e in data.teleEvents) {
+        let eData = data.teleEvents[e].event;
+        if (eData.location.includes('Rocket')) {
+            eData.success == 1 ? data[`teleRocket${eData.itemScored}`] += 1 : "";
+            if (eData.position[1] > 1) {
+                eData.success == 1 ? data[`teleLevel${eData.position[1]}${eData.itemScored}`] += 1 : data[`teleFailedLevel${eData.position[1]}${eData.itemScored}`] += 1;
+            }
+        } else {
+            data[`teleCargo${eData.itemScored}`] += 1;
+        }
+    }
+    data["autoFailedHatch"] = 0;
+    data["autoFailedCargo"] = 0
+    // hatch and cargo rate
+    for (var e in data.autoEvents) {
+        let eData = data.autoEvents[e].event;
+        if (eData.success == 0) {
+            data[`autoFailed${eData.itemScored}`] += 1;
+        }
+    }
+    data["teleUpperHatch"] = data["teleLevel2Hatch"] + data["teleLevel3Hatch"];
+    data["teleUpperCargo"] = data["teleLevel2Cargo"] + data["teleLevel3Cargo"];
+    data["habBonus"] = data.autoEvents.length > 0 ? 1 : data["habBonus"]; // make sure that if autoEvents happened, then habBonus is definitely 1.
+    data["habBonus"] = data["habBonus"] * parseInt(data["startingPosition"].charAt(1));
+    data["climbBonus"] = soloClimbPoints[data["soloClimb"]] + assistedClimbPoints[data["assistedClimb"]];
+    data["pointContribution"] = data["habBonus"]*3 + data["autoHatch"]*2 + data["autoCargo"]*3 + data["teleHatch"]*2 + data["teleCargo"]*3 + data["climbBonus"];
+    data["teleCycles"] = parseInt(data["teleHatch"]) + parseInt(data["teleCargo"]);
+    data = errorTest(data);
+    return data;
+}
+
+module.exports = {
+    decodeData: decodeData,
+ }
+
