@@ -12,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "firebase": "^7.17.1",
+    "mathjs": "^7.1.0",
     "start": "^5.1.0"
   }
 }
