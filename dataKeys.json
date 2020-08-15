@@ -1,7 +1,7 @@
 { 
     "generalKeys": {
         "aL": "autoLower",
-        "aO": "autoOuter",
+        "aU": "autoOuter",
         "aI": "autoInner",
         "t1": "tele1",
         "t2": "tele2",
@@ -10,13 +10,14 @@
         "t5": "tele5",
         "t6": "tele6",
         "nm": "name",
-        "sH": "soloHange",
+        "sH": "soloHang",
+        "aH": "assistedHang",
         "rD": "robotDied",
         "wH": "assistedHang",
         "dR": "driverRating",
         "deR": "defenseRating",
-        "pR": "PowercellIntakeRating",
-        "sR": "shootingRating",
+        "pI": "PowercellIntakeRating",
+        "s": "shootingRating",
         "n": "notes",
         "hN": "hangNotes",
         "e": "event",
@@ -24,7 +25,15 @@
         "m": "match",
         "a": "alliance",
         "sP": "startingPosition",
-        "iL": "intiationLine"
+        "iL": "intiationLine",
+        "rC": "rotationControl",
+        "pC": "positionControl",
+        "tL": "teleLower",
+        "tU": "teleOuter",
+        "tI": "teleInner"
+        
+        
+        
     },
     "eventKeys": {
         "aE": "autoEvents",
