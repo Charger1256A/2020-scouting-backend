@@ -1,6 +1,6 @@
 const fs = require('fs')
 const firebase = require('firebase');
-const statData = require('./stats2.json');
+const statData = require('./stats.json');
 const util = require('./utilities');
 
 const firebaseConfig = {

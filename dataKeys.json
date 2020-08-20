@@ -30,17 +30,11 @@
         "pC": "positionControl",
         "tL": "teleLower",
         "tU": "teleOuter",
-        "tI": "teleInner"
-        
-        
-        
-    },
-    "eventKeys": {
+        "tI": "teleInner",
         "aE": "autoEvents",
         "tE": "teleEvents",
         "tm": "time",
         "i": "itemScored",
-        "p": "position",
-        "e": "event"
+        "p": "position"
     }
 }
