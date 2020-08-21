@@ -1,7 +1,7 @@
 {
-  "name": "node-app",
+  "name": "app",
   "version": "1.0.0",
-  "description": "",
+  "description": "Dependencies that must be installed: ``` npm install express npm install mathjs npm install firebase ``` Make sure to add a keys.txt file and type in the auth key",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,8 +12,17 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "firebase": "^7.17.1",
+    "firebase": "^7.19.0",
     "mathjs": "^7.1.0",
     "start": "^5.1.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Charger1256A/2020-scouting-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Charger1256A/2020-scouting-backend/issues"
+  },
+  "homepage": "https://github.com/Charger1256A/2020-scouting-backend#readme"
 }

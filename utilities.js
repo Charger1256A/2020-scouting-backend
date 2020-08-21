@@ -40,9 +40,9 @@ function addStats(data) {
         var soloHangPoints = [0, 25, 40]
         var hangPoints = soloHangPoints[2]
     } else if (data["soloHang" == 1]) {
-        var hangPoints = soloHangPoints[1]
-    } else {
-        var hangPoints = soloHangPoints[0]
+        var hangPoints = 25
+    } else if (data["soloHang"] == 0) {
+        var hangPoints = 0
     }
     data["pointContribution"] = data["autoInner"] * 6 + data["autoOuter"] * 4 + data["autoLower"] * 2 + data["teleInner"] * 3 + data["teleOuter"] * 2 + data["teleLower"] + data["intiationLine"] * 5 + hangPoints;
     data["telePosition1Total"] = data["tele1"].lower + data["tele1"].outer + data["tele1"].inner;
@@ -53,6 +53,11 @@ function addStats(data) {
     data["telePosition6Total"] = data["tele6"].lower + data["tele6"].outer + data["tele6"].inner;
     data["autoPowercellTotal"] = data["autoLower"] + data["autoOuter"] + data["autoInner"];
     data["telePowercellTotal"] = data["teleLower"] + data["teleOuter"] + data["teleInner"];
+    data["telePosition"] = math.mean(data["telePosition1Total"], data["telePosition2Total"], data["telePosition3Total"], data["telePosition4Total"], data["telePosition5Total"], data["telePosition6Total"])
+    data["autoPowercell"] = math.mean(data["autoInner"], data["autoOuter"], data["autoLower"])
+    data["telePowercell"] = (math.mean(data["teleInner"], data["teleOuter"], data["teleLower"])) //Might multiply by three for clarity
+    // data["autoPowercellMax"] = ;
+
     return data
 }
 
@@ -128,6 +133,16 @@ function updateTotal(stats, matches) {
             stats.total["telePosition5MatchTotal"] += matches[match].telePosition5Total;
             stats.total["telePosition6MatchTotal"] += matches[match].telePosition6Total;
             stats.total["telePowercellTotal"] += parseInt(matches[match].telePowercellTotal);
+            if (matches[match].soloHang == 1) {
+                stats.total["soloHangTotal"] += 1
+            } else if (matches[match].soloHang == 2) {
+                stats.total["soloBalancedHangTotal"] += 1
+            }
+            if (matches[match].assistedHang == 1) {
+                stats.total["assistedHangTotal"] += 1
+            } else if (matches[match].assistedHang == 2) {
+                stats.total["assistedBalancedHangTotal"] += 1
+            }
         }
     }
     return stats;

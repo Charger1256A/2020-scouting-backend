@@ -70,6 +70,10 @@
         "telePowercellTotal": 0,
         "rotationControlTotal": 0,
         "positionControlTotal": 0,
-        "robotDiedTotal": 0
+        "robotDiedTotal": 0,
+        "soloHangTotal": 0,
+        "soloBalancedHangTotal": 0,
+        "assistedHangTotal": 0,
+        "assistedBalancedHangTotal": 0
     }
 }
