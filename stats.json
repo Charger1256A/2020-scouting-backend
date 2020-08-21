@@ -60,16 +60,16 @@
         "pointContributionMin": 0
     },
     "total": {
-        "telePosition1Total": 0,
-        "telePosition2Total": 0,
-        "telePosition3Total": 0,
-        "telePosition4Total": 0,
-        "telePosition5Total": 0,
-        "telePosition6Total": 0,
-        "autoPowercell": 0,
-        "telePowercell": 0,
-        "rotationControl": 0,
-        "positionControl": 0,
+        "telePosition1MatchTotal": 0,
+        "telePosition2MatchTotal": 0,
+        "telePosition3MatchTotal": 0,
+        "telePosition4MatchTotal": 0,
+        "telePosition5MatchTotal": 0,
+        "telePosition6MatchTotal": 0,
+        "autoPowercellTotal": 0,
+        "telePowercellTotal": 0,
+        "rotationControlTotal": 0,
+        "positionControlTotal": 0,
         "robotDiedTotal": 0
     }
 }

@@ -45,6 +45,7 @@ function updateStats(event, team) {
         stats = util.updateAverages(stats, matches);
         stats = util.updateStDevs(stats, matches);
         stats = util.updateMaxMin(stats, matches);
+        stats = util.updateTotal(stats, matches);
         db.ref(`/${event}/teams/${team}/stats`).update(stats);
     });
 }
