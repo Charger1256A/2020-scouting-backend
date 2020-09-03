@@ -38,14 +38,15 @@ function uploadMatch(data) {
     });
 }
 
-function updateStats(event, team) {
+function updateStats(event, team, data) {
     db.ref(`/${event}/teams/${team}`).once("value").then(function (snapshot) {
         let stats = snapshot.val().stats;
         let matches = snapshot.val().qm;
+        let match = parseInt(data.match.replace('Q', ''))
         stats = util.updateAverages(stats, matches);
         stats = util.updateStDevs(stats, matches);
         stats = util.updateMaxMin(stats, matches);
-        stats = util.updateTotal(stats, matches);
+        stats = util.updateTotal(stats, matches, match);
         db.ref(`/${event}/teams/${team}/stats`).update(stats);
     });
 }

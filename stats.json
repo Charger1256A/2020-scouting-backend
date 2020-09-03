@@ -9,16 +9,16 @@
         "teleInnerAverage": 0,
         "telePowercellAverage": 0,
         "soloHangAverage": 0,
-        "balancedHangAverage": 0,
         "assistedHangAverage": 0,
-        "assistedBalancedHangAverage": 0,
         "telePositionAverage": 0,
         "robotDiedAverage": 0,
         "driverRatingAverage": 0,
         "defenseRatingAverage": -1,
         "shootingRatingAverage": 0,
         "powercellIntakeRatingAverage": -1,
-        "pointContributionAverage": 0
+        "pointContributionAverage": 0,
+        "assistedBalancedHangAverage": 0,
+        "soloBalancedHangAverage": 0
     },
     "stDev": {
         "autoLowerStdev": 0,
@@ -42,7 +42,9 @@
         "defenseRatingMax": 0,
         "shootingRatingMax": 0,
         "powercellIntakeRatingMax": 0,
-        "pointContributionMax": 0
+        "pointContributionMax": 0,
+        "assistedBalancedHangMax": 0,
+        "soloBalancedHangMax": 0
     },
     "min": {
         "autoLowerMin": 0,
@@ -57,7 +59,9 @@
         "defenseRatingMin": 0,
         "shootingRatingMin": 0,
         "powercellIntakeRatingMin": 0,
-        "pointContributionMin": 0
+        "pointContributionMin": 0,
+        "assistedBalancedHangMin": 0,
+        "soloBalancedHangMin": 0
     },
     "total": {
         "telePosition1MatchTotal": 0,
@@ -72,8 +76,8 @@
         "positionControlTotal": 0,
         "robotDiedTotal": 0,
         "soloHangTotal": 0,
-        "soloBalancedHangTotal": 0,
         "assistedHangTotal": 0,
-        "assistedBalancedHangTotal": 0
+        "assistedBalancedHangTotal": 0,
+        "soloBalancedHangTotal": 0
     }
 }

@@ -7,7 +7,29 @@ let TBAKEY = fs.readFileSync('keys.txt', 'utf8').split("\n")[2];
 let TBABASE = "https://www.thebluealliance.com/api/v3"
 let TBAHEADER = { headers: { "X-TBA-Auth-Key": TBAKEY } };
 
-
+function mode(numbers) {
+    // as result can be bimodal or multimodal,
+    // the returned result is provided as an array
+    // mode of [3, 5, 4, 4, 1, 1, 2, 3] = [1, 3, 4]
+    var modes = [],
+        count = [],
+        i,
+        number,
+        maxIndex = 0;
+    for (i = 0; i < numbers.length; i += 1) {
+        number = numbers[i];
+        count[number] = (count[number] || 0) + 1;
+        if (count[number] > maxIndex) {
+            maxIndex = count[number];
+        }
+    }
+    for (i in count) if (count.hasOwnProperty(i)) {
+        if (count[i] === maxIndex) {
+            modes.push(Number(i));
+        }
+    }
+    return modes;
+}
 function renameKeys(data) {
     const cleanData = {}
     for (const [k, v] of Object.entries(data)) {
@@ -37,14 +59,38 @@ function addStats(data) {
     let assistedClimbPoints = [0, 50, 65];
 
     if (data["soloHang"] == 2) {
-        var soloHangPoints = [0, 25, 40]
-        var hangPoints = soloHangPoints[2]
-    } else if (data["soloHang" == 1]) {
+        var hangPoints = 40
+        data["soloBalancedHang"] = 100
+        data["soloHang"] = 100
+    } 
+    if (data["soloHang"] == 1) {
         var hangPoints = 25
-    } else if (data["soloHang"] == 0) {
+        data["soloBalancedHang"] = 0
+        data["soloHang"] = 100
+    } 
+    if (data["soloHang"] == 0) {
         var hangPoints = 0
+        data["soloBalancedHang"] = 0
+        data["soloHang"] = 0
     }
-    data["pointContribution"] = data["autoInner"] * 6 + data["autoOuter"] * 4 + data["autoLower"] * 2 + data["teleInner"] * 3 + data["teleOuter"] * 2 + data["teleLower"] + data["intiationLine"] * 5 + hangPoints;
+
+    if (data["assistedHang"] == 2) {
+        var assistedHangPoints = 65
+        data["assistedBalancedHang"] = 100
+        data["assistedHang"] = 100
+    }
+    if (data["assistedHang"] == 1) {
+        var assistedHangPoints = 50
+        data["assistedBalancedHang"] = 0
+        data["assistedHang"] = 100
+    }
+    if (data["assistedHang"] == 0) {
+        var assistedHangPoints = 0
+        data["assistedBalancedHang"] = 0
+        data["assistedHang"] = 0
+    }
+
+    data["pointContribution"] = data["autoInner"] * 6 + data["autoOuter"] * 4 + data["autoLower"] * 2 + data["teleInner"] * 3 + data["teleOuter"] * 2 + data["teleLower"] + data["intiationLine"] * 5 + hangPoints + assistedHangPoints;
     data["telePosition1Total"] = data["tele1"].lower + data["tele1"].outer + data["tele1"].inner;
     data["telePosition2Total"] = data["tele2"].lower + data["tele2"].outer + data["tele2"].inner;
     data["telePosition3Total"] = data["tele3"].lower + data["tele3"].outer + data["tele3"].inner;
@@ -53,10 +99,9 @@ function addStats(data) {
     data["telePosition6Total"] = data["tele6"].lower + data["tele6"].outer + data["tele6"].inner;
     data["autoPowercellTotal"] = data["autoLower"] + data["autoOuter"] + data["autoInner"];
     data["telePowercellTotal"] = data["teleLower"] + data["teleOuter"] + data["teleInner"];
-    data["telePosition"] = math.mean(data["telePosition1Total"], data["telePosition2Total"], data["telePosition3Total"], data["telePosition4Total"], data["telePosition5Total"], data["telePosition6Total"])
-    data["autoPowercell"] = math.mean(data["autoInner"], data["autoOuter"], data["autoLower"])
-    data["telePowercell"] = (math.mean(data["teleInner"], data["teleOuter"], data["teleLower"])) //Might multiply by three for clarity
-    // data["autoPowercellMax"] = ;
+    data["telePosition"] = math.max(data["telePosition1Total"], data["telePosition2Total"], data["telePosition3Total"], data["telePosition4Total"], data["telePosition5Total"], data["telePosition6Total"]);
+    data["autoPowercell"] = ((data["autoInner"]) + (data["autoOuter"]) + data["autoLower"])
+    data["telePowercell"] = ((data["teleInner"]) + (data["teleOuter"]) + data["teleLower"])
 
     return data
 }
@@ -73,7 +118,7 @@ function updateAverages(stats, matches) {
             }
 
             if (values.length) {
-                stats.avg[key] = math.mean(values)
+                stats.avg[key] = (math.round((math.mean(values)*100)))/100
             }
         }
     }
@@ -92,7 +137,7 @@ function updateStDevs(stats, matches) {
             }
         }
         if (values.length >= 1) {
-            stats.stDev[key] = math.std(values);
+            stats.stDev[key] = (math.round((math.std(values)*100)))/100;
         }
     }
     return stats;
@@ -108,24 +153,29 @@ function updateMaxMin(stats, matches) {
             }
         }
         if (values.length >= 1) {
-            stats.max[key] = math.max(values);
-            stats.min[key.replace("Max", "Min")] = math.min(values);
+            stats.max[key] = (math.round((math.max(values)*100)))/100;
+            stats.min[key.replace("Max", "Min")] = (math.round((math.min(values)*100)))/100;
         }
     }
     return stats;
 }
 
-function updateTotal(stats, matches) {
-    for (var match in matches) {
-        if (!matches[match]['-']) {
+function updateTotal(stats, matches, match) {
+    // for (var match in matches) {
+        // if (!matches[match]['-']) {
             stats.total["autoPowercellTotal"] += parseInt(matches[match].autoPowercellTotal);
             if (matches[match].positionControl == 'true') {
-                stats.total["positionControl"] += 1;
+                stats.total["positionControlTotal"] += 1;
+            } else {
+                stats.total["positionControlTotal"] += 0;
             }
             stats.total["robotDiedTotal"] += parseInt(matches[match].robotDied);
             if (matches[match].rotationControl == 'true') {
-                stats.total["rotationControl"] += 1;
+                stats.total["rotationControlTotal"] += 1;
+            } else {
+                stats.total["rotationControlTotal"] += 0;
             }
+        
             stats.total["telePosition1MatchTotal"] += matches[match].telePosition1Total;
             stats.total["telePosition2MatchTotal"] += matches[match].telePosition2Total;
             stats.total["telePosition3MatchTotal"] += matches[match].telePosition3Total;
@@ -133,18 +183,20 @@ function updateTotal(stats, matches) {
             stats.total["telePosition5MatchTotal"] += matches[match].telePosition5Total;
             stats.total["telePosition6MatchTotal"] += matches[match].telePosition6Total;
             stats.total["telePowercellTotal"] += parseInt(matches[match].telePowercellTotal);
-            if (matches[match].soloHang == 1) {
+            if (matches[match].soloHang == 100) {
                 stats.total["soloHangTotal"] += 1
-            } else if (matches[match].soloHang == 2) {
+            } 
+            if (matches[match].soloBalancedHang == 100) {
                 stats.total["soloBalancedHangTotal"] += 1
             }
-            if (matches[match].assistedHang == 1) {
+            if (matches[match].assistedHang == 100) {
                 stats.total["assistedHangTotal"] += 1
-            } else if (matches[match].assistedHang == 2) {
+            } 
+            if (matches[match].assistedBalancedHang == 100) {
                 stats.total["assistedBalancedHangTotal"] += 1
             }
-        }
-    }
+        // }
+    // }
     return stats;
 }
 
