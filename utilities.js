@@ -98,10 +98,29 @@ function addStats(data) {
     data["telePosition5Total"] = data["tele5"].lower + data["tele5"].outer + data["tele5"].inner;
     data["telePosition6Total"] = data["tele6"].lower + data["tele6"].outer + data["tele6"].inner;
     data["autoPowercellTotal"] = data["autoLower"] + data["autoOuter"] + data["autoInner"];
+    //autoPowercellTotal and is how many powercells were scored in each of the ports in auto
     data["telePowercellTotal"] = data["teleLower"] + data["teleOuter"] + data["teleInner"];
-    data["telePosition"] = math.max(data["telePosition1Total"], data["telePosition2Total"], data["telePosition3Total"], data["telePosition4Total"], data["telePosition5Total"], data["telePosition6Total"]);
-    data["autoPowercell"] = ((data["autoInner"]) + (data["autoOuter"]) + data["autoLower"])
-    data["telePowercell"] = ((data["teleInner"]) + (data["teleOuter"]) + data["teleLower"])
+    //telePowercellTotal and is how many powercells were scored in each of the ports in tele
+    
+    let object1 = JSON.parse(JSON.stringify(data))
+    for (key in object1) {
+        if (key != 'telePosition1Total' && key != 'telePosition2Total' && key != 'telePosition3Total' && key != 'telePosition4Total' && key != 'telePosition5Total' && key != 'telePosition6Total') {
+            delete object1[key]
+        }
+    }
+    var sortable = [];
+    for (var item in object1) {
+        sortable.push([item, object1[item]]);
+    }
+    sortable.sort(function(a, b){return b[1]-a[1]})
+    
+    let temp = sortable[0][0].replace('telePosition', '').replace('Total', ''); 
+    data["telePosition"] = parseInt(temp, 10);
+    //telePosition is the position where the most points were scored
+    data["autoPowercell"] = ((data["autoInner"]*6) + (data["autoOuter"]*4) + data["autoLower"]*2)
+    //autoPowercell is how many points were scored in auto
+    data["telePowercell"] = ((data["teleInner"]*3) + (data["teleOuter"]*2) + data["teleLower"]*1)
+    //telePowercell is how many points were scored in tele
 
     return data
 }
