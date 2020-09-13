@@ -49,6 +49,7 @@ app.post('/initialize_event/:key/:auth/', (req, res) => {
 app.get('/grab_data/:key/', (req,res) => {
     let path = `/${req.params.key}/teams`;
     fb.get(path).then((dbResponse) => {
+        res.header("Access-Control-Allow-Origin", "*");
         res.send(dbResponse);
     })
 })
