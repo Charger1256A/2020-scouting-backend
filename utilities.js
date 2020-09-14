@@ -7,29 +7,6 @@ let TBAKEY = fs.readFileSync('keys.txt', 'utf8').split("\n")[2];
 let TBABASE = "https://www.thebluealliance.com/api/v3"
 let TBAHEADER = { headers: { "X-TBA-Auth-Key": TBAKEY } };
 
-function mode(numbers) {
-    // as result can be bimodal or multimodal,
-    // the returned result is provided as an array
-    // mode of [3, 5, 4, 4, 1, 1, 2, 3] = [1, 3, 4]
-    var modes = [],
-        count = [],
-        i,
-        number,
-        maxIndex = 0;
-    for (i = 0; i < numbers.length; i += 1) {
-        number = numbers[i];
-        count[number] = (count[number] || 0) + 1;
-        if (count[number] > maxIndex) {
-            maxIndex = count[number];
-        }
-    }
-    for (i in count) if (count.hasOwnProperty(i)) {
-        if (count[i] === maxIndex) {
-            modes.push(Number(i));
-        }
-    }
-    return modes;
-}
 function renameKeys(data) {
     const cleanData = {}
     for (const [k, v] of Object.entries(data)) {
@@ -89,6 +66,9 @@ function addStats(data) {
         data["assistedBalancedHang"] = 0
         data["assistedHang"] = 0
     }
+    if (data["robotDied"] == 1) {
+        data["robotDied"] = 100
+    }
 
     data["pointContribution"] = data["autoInner"] * 6 + data["autoOuter"] * 4 + data["autoLower"] * 2 + data["teleInner"] * 3 + data["teleOuter"] * 2 + data["teleLower"] + data["intiationLine"] * 5 + hangPoints + assistedHangPoints;
     data["telePosition1Total"] = data["tele1"].lower + data["tele1"].outer + data["tele1"].inner;
@@ -117,9 +97,9 @@ function addStats(data) {
     let temp = sortable[0][0].replace('telePosition', '').replace('Total', ''); 
     data["telePosition"] = parseInt(temp, 10);
     //telePosition is the position where the most points were scored
-    data["autoPowercell"] = ((data["autoInner"]*6) + (data["autoOuter"]*4) + data["autoLower"]*2)
+    data["autoPoints"] = ((data["autoInner"]*6) + (data["autoOuter"]*4) + data["autoLower"]*2)
     //autoPowercell is how many points were scored in auto
-    data["telePowercell"] = ((data["teleInner"]*3) + (data["teleOuter"]*2) + data["teleLower"]*1)
+    data["telePoints"] = ((data["teleInner"]*3) + (data["teleOuter"]*2) + data["teleLower"]*1)
     //telePowercell is how many points were scored in tele
 
     return data
@@ -143,8 +123,6 @@ function updateAverages(stats, matches) {
     }
     return stats;
 }
-
-
 
 function updateStDevs(stats, matches) {
     for (var key in stats.stDev) {
@@ -188,7 +166,6 @@ function updateTotal(stats, matches, match) {
             } else {
                 stats.total["positionControlTotal"] += 0;
             }
-            stats.total["robotDiedTotal"] += parseInt(matches[match].robotDied);
             if (matches[match].rotationControl == 'true') {
                 stats.total["rotationControlTotal"] += 1;
             } else {
@@ -213,6 +190,9 @@ function updateTotal(stats, matches, match) {
             } 
             if (matches[match].assistedBalancedHang == 100) {
                 stats.total["assistedBalancedHangTotal"] += 1
+            }
+            if (matches[match].robotDied == 100) {
+                stats.total["robotDiedTotal"] += 1
             }
         // }
     // }
