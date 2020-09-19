@@ -96,10 +96,12 @@ function addStats(data) {
     
     let temp = sortable[0][0].replace('telePosition', '').replace('Total', ''); 
     data["telePosition"] = parseInt(temp, 10);
+
+    
     //telePosition is the position where the most points were scored
-    data["autoPoints"] = ((data["autoInner"]*6) + (data["autoOuter"]*4) + data["autoLower"]*2)
+    data["autoPowercellPoints"] = ((data["autoInner"]*6) + (data["autoOuter"]*4) + data["autoLower"]*2)
     //autoPowercell is how many points were scored in auto
-    data["telePoints"] = ((data["teleInner"]*3) + (data["teleOuter"]*2) + data["teleLower"]*1)
+    data["telePowercellPoints"] = ((data["teleInner"]*3) + (data["teleOuter"]*2) + data["teleLower"]*1)
     //telePowercell is how many points were scored in tele
 
     return data
@@ -160,7 +162,7 @@ function updateMaxMin(stats, matches) {
 function updateTotal(stats, matches, match) {
     // for (var match in matches) {
         // if (!matches[match]['-']) {
-            stats.total["autoPowercellTotal"] += parseInt(matches[match].autoPowercellTotal);
+            stats.total["autoPowercellPointsTotal"] += (matches[match].autoPowercellPoints);
             if (matches[match].positionControl == 'true') {
                 stats.total["positionControlTotal"] += 1;
             } else {
@@ -178,7 +180,7 @@ function updateTotal(stats, matches, match) {
             stats.total["telePosition4MatchTotal"] += matches[match].telePosition4Total;
             stats.total["telePosition5MatchTotal"] += matches[match].telePosition5Total;
             stats.total["telePosition6MatchTotal"] += matches[match].telePosition6Total;
-            stats.total["telePowercellTotal"] += parseInt(matches[match].telePowercellTotal);
+            stats.total["telePowercellPointsTotal"] += (matches[match].telePowercellPoints);
             if (matches[match].soloHang == 100) {
                 stats.total["soloHangTotal"] += 1
             } 
