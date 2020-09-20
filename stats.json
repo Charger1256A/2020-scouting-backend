@@ -54,7 +54,7 @@
         "teleLowerMin": 0,
         "teleOuterMin": 0,
         "teleInnerMin": 0,
-        "telePointsMin": 0,
+        "telePowercellPointsMIn": 0,
         "driverRatingMin": 0,
         "defenseRatingMin": 0,
         "shootingRatingMin": 0,
