@@ -39,13 +39,11 @@ function addStats(data) {
         var hangPoints = 40
         data["soloBalancedHang"] = 100
         data["soloHang"] = 100
-    } 
-    if (data["soloHang"] == 1) {
+    } else if (data["soloHang"] == 1) {
         var hangPoints = 25
         data["soloBalancedHang"] = 0
         data["soloHang"] = 100
-    } 
-    if (data["soloHang"] == 0) {
+    } else if (data["soloHang"] == 0) {
         var hangPoints = 0
         data["soloBalancedHang"] = 0
         data["soloHang"] = 0
@@ -55,13 +53,11 @@ function addStats(data) {
         var assistedHangPoints = 65
         data["assistedBalancedHang"] = 100
         data["assistedHang"] = 100
-    }
-    if (data["assistedHang"] == 1) {
+    } else if (data["assistedHang"] == 1) {
         var assistedHangPoints = 50
         data["assistedBalancedHang"] = 0
         data["assistedHang"] = 100
-    }
-    if (data["assistedHang"] == 0) {
+    } else if (data["assistedHang"] == 0) {
         var assistedHangPoints = 0
         data["assistedBalancedHang"] = 0
         data["assistedHang"] = 0
@@ -70,18 +66,27 @@ function addStats(data) {
         data["robotDied"] = 100
     }
 
-    data["pointContribution"] = data["autoInner"] * 6 + data["autoOuter"] * 4 + data["autoLower"] * 2 + data["teleInner"] * 3 + data["teleOuter"] * 2 + data["teleLower"] + data["intiationLine"] * 5 + hangPoints + assistedHangPoints;
+    //misspelled
+    if (data["intiationLine"] == 1) {
+        var initiationLinePoints = 5
+        data["intiationLine"] == 100
+    } else {
+        var initiationLinePoints = 0
+        data["intiationLine"] == 0
+    }
+
+    data["pointContribution"] = data["autoInner"] * 6 + data["autoOuter"] * 4 + data["autoLower"] * 2 + data["teleInner"] * 3 + data["teleOuter"] * 2 + data["teleLower"] + initiationLinePoints + hangPoints + assistedHangPoints;
     data["telePosition1Total"] = data["tele1"].lower + data["tele1"].outer + data["tele1"].inner;
     data["telePosition2Total"] = data["tele2"].lower + data["tele2"].outer + data["tele2"].inner;
     data["telePosition3Total"] = data["tele3"].lower + data["tele3"].outer + data["tele3"].inner;
     data["telePosition4Total"] = data["tele4"].lower + data["tele4"].outer + data["tele4"].inner;
     data["telePosition5Total"] = data["tele5"].lower + data["tele5"].outer + data["tele5"].inner;
     data["telePosition6Total"] = data["tele6"].lower + data["tele6"].outer + data["tele6"].inner;
-    data["autoPowercellTotal"] = data["autoLower"] + data["autoOuter"] + data["autoInner"];
-    //autoPowercellTotal and is how many powercells were scored in each of the ports in auto
-    data["telePowercellTotal"] = data["teleLower"] + data["teleOuter"] + data["teleInner"];
-    //telePowercellTotal and is how many powercells were scored in each of the ports in tele
-    
+    data["autoPowercell"] = data["autoLower"] + data["autoOuter"] + data["autoInner"];
+    data["telePowercell"] = data["teleLower"] + data["teleOuter"] + data["teleInner"];
+    data["autoPowercellPoints"] = ((data["autoInner"]*6) + (data["autoOuter"]*4) + data["autoLower"]*2)
+    data["telePowercellPoints"] = ((data["teleInner"]*3) + (data["teleOuter"]*2) + data["teleLower"]*1)
+
     let object1 = JSON.parse(JSON.stringify(data))
     for (key in object1) {
         if (key != 'telePosition1Total' && key != 'telePosition2Total' && key != 'telePosition3Total' && key != 'telePosition4Total' && key != 'telePosition5Total' && key != 'telePosition6Total') {
@@ -93,16 +98,8 @@ function addStats(data) {
         sortable.push([item, object1[item]]);
     }
     sortable.sort(function(a, b){return b[1]-a[1]})
-    
     let temp = sortable[0][0].replace('telePosition', '').replace('Total', ''); 
     data["telePosition"] = parseInt(temp, 10);
-
-    
-    //telePosition is the position where the most points were scored
-    data["autoPowercellPoints"] = ((data["autoInner"]*6) + (data["autoOuter"]*4) + data["autoLower"]*2)
-    //autoPowercell is how many points were scored in auto
-    data["telePowercellPoints"] = ((data["teleInner"]*3) + (data["teleOuter"]*2) + data["teleLower"]*1)
-    //telePowercell is how many points were scored in tele
 
     return data
 }
@@ -117,7 +114,6 @@ function updateAverages(stats, matches) {
                     values.push(avg);
                 }
             }
-
             if (values.length) {
                 stats.avg[key] = (math.round((math.mean(values)*100)))/100
             }
@@ -160,9 +156,6 @@ function updateMaxMin(stats, matches) {
 }
 
 function updateTotal(stats, matches, match) {
-    // for (var match in matches) {
-        // if (!matches[match]['-']) {
-            stats.total["autoPowercellPointsTotal"] += (matches[match].autoPowercellPoints);
             if (matches[match].positionControl == 'true') {
                 stats.total["positionControlTotal"] += 1;
             } else {
@@ -173,14 +166,6 @@ function updateTotal(stats, matches, match) {
             } else {
                 stats.total["rotationControlTotal"] += 0;
             }
-        
-            stats.total["telePosition1MatchTotal"] += matches[match].telePosition1Total;
-            stats.total["telePosition2MatchTotal"] += matches[match].telePosition2Total;
-            stats.total["telePosition3MatchTotal"] += matches[match].telePosition3Total;
-            stats.total["telePosition4MatchTotal"] += matches[match].telePosition4Total;
-            stats.total["telePosition5MatchTotal"] += matches[match].telePosition5Total;
-            stats.total["telePosition6MatchTotal"] += matches[match].telePosition6Total;
-            stats.total["telePowercellPointsTotal"] += (matches[match].telePowercellPoints);
             if (matches[match].soloHang == 100) {
                 stats.total["soloHangTotal"] += 1
             } 
@@ -196,8 +181,16 @@ function updateTotal(stats, matches, match) {
             if (matches[match].robotDied == 100) {
                 stats.total["robotDiedTotal"] += 1
             }
-        // }
-    // }
+            
+            stats.total["telePosition1MatchTotal"] += matches[match].telePosition1Total;
+            stats.total["telePosition2MatchTotal"] += matches[match].telePosition2Total;
+            stats.total["telePosition3MatchTotal"] += matches[match].telePosition3Total;
+            stats.total["telePosition4MatchTotal"] += matches[match].telePosition4Total;
+            stats.total["telePosition5MatchTotal"] += matches[match].telePosition5Total;
+            stats.total["telePosition6MatchTotal"] += matches[match].telePosition6Total;
+            stats.total["autoPowercellPointsTotal"] += (matches[match].autoPowercellPoints);
+            stats.total["telePowercellPointsTotal"] += (matches[match].telePowercellPoints);
+
     return stats;
 }
 

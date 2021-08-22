@@ -4,7 +4,7 @@ const fs = require('fs');
 const util = require('./utilities');
 const fb = require('./firebase_interactor');
 const app = express()
-const PORT = 4000
+const PORT = 3000
 // Listens on PORT 4040 for ngrok pipe
 
 
@@ -54,8 +54,7 @@ app.get('/grab_data/:key/', (req,res) => {
     })
 })
 
-
 app.listen(PORT, () => {
     console.log("Authenticating...");
-    console.log(`Running server on port ${PORT}`)
+    console.log(`Running server on port ${PORT}`);
 })  
